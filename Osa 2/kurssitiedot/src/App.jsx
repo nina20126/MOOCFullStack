@@ -8,8 +8,9 @@ const Header = ({ title }) => {
 
 const Content = ({ parts }) => {
   console.log('Content', parts)
-  const sum = parts.map(amount => amount.exercises).reduce((a, b) => a + b)
-  console.log('sum', sum)
+  const sum = parts.reduce((amount, part) => amount = amount + part.exercises, 0)
+  console.log('sum:', sum)
+  
   return(
     <div>
       <ul>
