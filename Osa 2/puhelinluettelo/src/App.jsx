@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import './App.css'
 
 const App = () => {
   const [person, setPerson] = useState([
-    {
-      name: 'Arto Hellas',
-      number: '040-1231244'
-    }
+    { name: 'Arto Hellas', number: '040-1231244' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [searchBarQuery, setSearchBarQuery] = useState('')
 
   const addName = (event) => { 
     event.preventDefault() 
@@ -40,6 +40,7 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+
   const clearForm = () => {
     setNewName('')
     setNewNumber('')
@@ -48,6 +49,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Search: <input 
+          placeholder="Search..." 
+          onChange={(event) => setSearchBarQuery((event.target.value).toLowerCase())}
+          />
+      </div>
+      <h2>Add new contact</h2>
       <form onSubmit={addName}>
         <div>
           Name: <input value={newName} onChange={handleNameChange}/>
@@ -62,8 +70,9 @@ const App = () => {
 
       <h2>Numbers</h2>
       <div>
-        {person.map(p => 
-        <li style={{listStyleType: 'none'}} key={p.name} > 
+        {person.filter((p)=>
+          p.name.toLowerCase().includes(searchBarQuery)).map(p => 
+          <li style={{listStyleType: 'none'}} key={p.name} > 
           {p.name} {p.number}
         </li>)}
       </div>
