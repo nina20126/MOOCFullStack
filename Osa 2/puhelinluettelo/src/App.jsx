@@ -7,20 +7,30 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
 
-  const addName = (event) => {
-    event.preventDefault()
-    const nameObject = {
-      name: newName,
-    }
-    setPerson(person.concat(nameObject))
-    setNewName('')
+  // tapahtumankäsittelijäfunktio reagoi napin painamiseen
+  const addName = (event) => { // Parametrin event arvona on metodin kutsun aiheuttama
+    event.preventDefault() // estää lomakkeen oletusarvoisen toiminnan, sivun uudelleen latautumisen
+
+      const nameObject = {
+        name: newName,
+      }
+
+      const allNames = person.map((all) => all.name)
+      const findName = allNames.includes(newName)
+
+      if (findName) {
+        alert(`${newName} is already added to phonebook `)
+      } else {
+        setPerson(person.concat(nameObject))
+        setNewName('')
+      }
+
   }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
 
-  
   return (
     <div>
       <h2>Phonebook</h2>
