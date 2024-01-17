@@ -11,7 +11,7 @@ const Person = ({ persons, searchInput, deleteObject }) => {
         .map((person, index) => (
           <li key={index}>
             {person.name} {person.number}{" "}
-            <button onClick={() => deleteObject(person.id)}>Delete</button>
+            <button onClick={() => deleteObject(person.name, person.id)}>Delete</button>
           </li>
         ))}
       </ul>
