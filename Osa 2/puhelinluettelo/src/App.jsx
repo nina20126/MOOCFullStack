@@ -20,6 +20,10 @@ const App = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setMessage(`An error orrured while fething data`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
   }, []);
 
@@ -62,6 +66,10 @@ const App = () => {
 
         .catch((error) => {
           console.error("Error creating person:", error);
+          setMessage(`An error occurred while creating person ${newName}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         });
     }
   };
@@ -108,6 +116,10 @@ const App = () => {
 
         .catch((error) => {
           console.error("Error deleting person:", error);
+          setMessage(`An error occurred while deleting person ${name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         });
     }
   };
@@ -126,6 +138,10 @@ const App = () => {
         }, 5000);
       })
       .catch((error) => console.log("Update error: ", error));
+    setMessage(`An error orrured while updating person ${updatedInfo.name}`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
     clearForm();
   };
 
