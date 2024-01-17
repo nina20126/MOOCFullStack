@@ -30,8 +30,20 @@ const App = () => {
     const allNames = persons.map((all) => all.name);
     const findName = allNames.includes(newName);
 
+    const existingPerson = persons.find((person) => person.name === newName)
+    const existingPersonId = existingPerson.id
+    //console.log("Id:", existingPersonId)
+
     if (findName) {
-      alert(`${newName} is already added to phonebook `)
+      const updateNumber = window.confirm(`${newName} is already added to phonebook. Do you want to update number?`)
+      
+      if (updateNumber) {
+        const updatedPerson = {...existingPerson, number: newNumber}
+        updatePerson(existingPersonId, updatedPerson)
+      } else {
+        clearForm()
+      }
+
     } else {
       personService.create(personObject)
       .then((returnedPerson) => {
@@ -40,7 +52,6 @@ const App = () => {
       })
       .catch((error) => {
         console.error("Error creating person:", error);
-        // Handle the error as needed, e.g., set an error state, display an error message, etc.
       })
       
     }
@@ -84,6 +95,17 @@ const App = () => {
         });
     }
   };
+
+  const updatePerson = (id, updatedInfo) => {
+    personService
+    .update(id, updatedInfo)
+    .then((returnedPerson) => {
+      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+      console.log("updated succesfully")
+    })
+    .catch(error => console.log("Update error: ", error))
+    clearForm()
+  }
 
   return (
     <div>
