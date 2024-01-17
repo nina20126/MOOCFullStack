@@ -1,12 +1,14 @@
-const Search = ({ setSearchBarQuery }) => {
-    return(
-      <div>
-        Search: <input 
-          placeholder="Search..." 
-          onChange={(event) => setSearchBarQuery((event.target.value).toLowerCase())}
-        />
+const Search = ({ handleSearch, searchInput }) => {
+  return (
+    <div>
+      Search:{" "}
+      <input
+        placeholder="Search..."
+        onChange={handleSearch}
+        value={searchInput}
+      />
     </div>
-    )
-  }
+  );
+};
 
-export default Search
+export default Search;

@@ -1,42 +1,40 @@
-import { useState, useEffect } from "react";
-import Persons from "./components/Persons";
-import PersonForm from "./components/PersonForm";
+import { useEffect, useState } from "react";
+import Person from "./components/Person";
+import NewPersonForm from "./components/NewPersonForm";
 import Search from "./components/Search";
-import peopleService from "./services/people";
+import axios from "axios";
 
 const App = () => {
-  const [person, setPerson] = useState([]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [searchBarQuery, setSearchBarQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    peopleService.getAll().then((initialPerson) => {
-      setPerson(initialPerson);
-      console.log(initialPerson);
-    });
-  }, []);
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
 
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault();
-
-    const nameObject = {
+    const personObject = {
       name: newName,
       number: newNumber,
     };
 
-    const allNames = person.map((all) => all.name);
+    const allNames = persons.map((all) => all.name);
     const findName = allNames.includes(newName);
 
     if (findName) {
       alert(`${newName} is already added to phonebook `);
-      clearForm();
     } else {
-      peopleService.create(nameObject).then((returnedPerson) => {
-        setPerson(person.concat(returnedPerson));
-        clearForm();
-      });
+      setPersons(persons.concat(personObject));
     }
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleNameChange = (event) => {
@@ -47,36 +45,18 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const clearForm = () => {
-    setNewName("");
-    setNewNumber("");
-  };
-
-  const deleteObject = (id) => {
-    const comfirmDelete = confirm(
-      `Are you sure you want to delete person ${id}?`
-    ); // This is causing the [Violation] 'click' handler -error/notification in the console.
-
-    if (comfirmDelete) {
-      peopleService
-        .deletePerson(id)
-        .then(() => {
-          console.log(`Deleted post with ID ${id}`);
-          setPerson(person.filter((p) => p.id !== id));
-        })
-        .catch((error) => {
-          console.error("Error deleting person:", error);
-        });
-    }
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const searchValue = event.target.value;
+    const searchValueLower = searchValue.toLowerCase();
+    setSearchInput(searchValueLower);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Search setSearchBarQuery={setSearchBarQuery} />
-      <h2>Add new contact</h2>
-      <PersonForm
-        addName={addName}
+      <NewPersonForm
+        addPerson={addPerson}
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
@@ -84,11 +64,8 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons
-        person={person}
-        search={searchBarQuery}
-        deleteObject={deleteObject}
-      />
+      <Search handleSearch={handleSearch} searchInput={searchInput} />
+      <Person persons={persons} searchInput={searchInput} />
     </div>
   );
 };
